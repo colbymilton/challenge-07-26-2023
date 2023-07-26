@@ -1,0 +1,38 @@
+---------Golang Skills Challenge----------
+Objectives:
+    - Implement a Golang REST API using the Gin web framework
+    - Add middleware that checks and validates an Authorization Token
+    - Token check can be hard coded
+    - Add middleware that logs all endpoint requests to console
+    -  Add handlers  for the following endpoints:
+        GET/PATCH/POST/DELETE  /users
+    - Only admin roles can POST and DELETE
+    - Add appropriate repositories or services to support endpoints
+    - Use temporary In Memory Data Dictionary to store users instead of DB *  
+    - Add swagger documentation to each endpoint (optional)
+
+Skills being tested:
+    - Software engineering competencies
+    - Design Focused
+    - Golang + Gin Framework competencies
+    - REST API design skills
+    - Using golang to compose solution following SOLID and KISS principles
+    - Use of golang abstractions
+    - Re-usability of repository/services
+    - Ability to test repository/services without having to use http client such as Postman/Thunder
+
+Additional areas of Evaluation:
+    - Is established implementation pattern repeatable across all endpoints
+    - Can I test domain assets without using Postman/Thunder/Curl ..etc
+    - Can junior developers with minimal instructions/ramp up and start contributing to the solution
+    - Quality of documentation
+
+Additional Implementation Details:
+    - User
+        - Role string
+        - Email string [Primary Key]
+    Possible Value of Role Are :  admin and guest
+
+* Use an in memory dictionary to store and serve users  where the key is email and  role is value. 
+When the program is terminated the in-memory dictionary will be destroyed and data lost. 
+Dictionary does not have to be thread safe (add commentary to explain what you would need to do in order to ensure thread-safety)
