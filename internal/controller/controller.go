@@ -15,6 +15,19 @@ func NewUserController() *UserController {
 	}
 }
 
+// GetUserRole returns the role of the specified email
+// returns an error if the user does not exist
+func (uc *UserController) GetUserRole(email string) (UserRole, error) {
+	uc.mutex.RLock()
+	defer uc.mutex.RUnlock()
+
+	if role, exists := uc.users[email]; exists {
+		return role, nil
+	} else {
+		return "", ErrUserNotFound
+	}
+}
+
 // GetUsers returns a list containing every user in the system
 func (uc *UserController) GetUsers() []*User {
 	uc.mutex.RLock()
