@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"os"
+	"sync"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -79,4 +80,27 @@ func TestDeleteUser(t *testing.T) {
 
 	// confirm that a user was deleted
 	require.Len(t, controller.users, 4)
+}
+
+func TestConcurrency(t *testing.T) {
+	controller := initController(1)
+
+	var wg sync.WaitGroup
+	for i := 0; i < 1000; i++ {
+		wg.Add(2)
+		go concurrentAdd(controller, fmt.Sprintf("%v@email.com", i), &wg)
+		go concurrentRead(controller, &wg)
+	}
+	wg.Wait()
+	require.Len(t, controller.users, 1001)
+}
+
+func concurrentAdd(controller *memoryController, email string, wg *sync.WaitGroup) {
+	controller.AddUser(&User{Email: email, Role: RoleGuest})
+	wg.Done()
+}
+
+func concurrentRead(controller *memoryController, wg *sync.WaitGroup) {
+	controller.GetUsers()
+	wg.Done()
 }
