@@ -3,7 +3,6 @@ package restserver
 import (
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/colbymilton/challenge-07-26-2023/internal/controller"
 	"github.com/gin-gonic/gin"
@@ -11,7 +10,7 @@ import (
 
 // logMiddleware is a middleware that will log the requests being received
 func logMiddleware(c *gin.Context) {
-	log.Printf("Received request: %v %v at %v\n", c.Request.Method, c.Request.RequestURI, time.Now())
+	log.Printf("Received request: %v %v\n", c.Request.Method, c.Request.RequestURI)
 }
 
 // authMiddleware is a middleware that handles authorization by ensuring that the token
@@ -27,8 +26,8 @@ func authMiddleware(authorizedRoles ...controller.UserRole) gin.HandlerFunc {
 
 		// validate the token
 		// in a "real" application, this would likely be a more involved process
-		// here the token is simply a user email
-		role, err := server.controller.GetUserRole(authToken)
+		// here the token is simply a hashed user email
+		role, err := server.controller.GetUserRoleFromHash(authToken)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, ginError(err.Error()))
 			return

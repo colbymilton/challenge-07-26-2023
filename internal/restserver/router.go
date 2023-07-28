@@ -8,16 +8,21 @@ import (
 var server *UserServer
 
 type UserServer struct {
-	controller *controller.UserController
+	controller controller.UserController
 }
 
 func Run() {
+	router := setupRouter()
+	router.Run(":9000")
+}
+
+func setupRouter() *gin.Engine {
 	if server != nil {
 		panic("server is already running")
 	}
 
 	server = &UserServer{
-		controller: controller.NewUserController(),
+		controller: controller.NewMemoryController(),
 	}
 
 	router := gin.Default()
@@ -35,5 +40,5 @@ func Run() {
 	adminAuthGroup.PATCH("/users", updateUser)
 	adminAuthGroup.DELETE("/users/:email", deleteUser)
 
-	router.Run(":9000")
+	return router
 }

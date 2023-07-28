@@ -8,8 +8,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func initController(userCount int) *UserController {
-	controller := NewUserController()
+func initController(userCount int) *memoryController {
+	controller := NewMemoryController()
 	for i := 1; i < userCount; i++ {
 		controller.users[fmt.Sprintf("%d@email.com", i)] = RoleGuest
 	}
