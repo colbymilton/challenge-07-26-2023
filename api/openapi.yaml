@@ -1,0 +1,117 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Coding Challenge User API
+
+components:
+  schemas:
+    UserRole:
+      type: string
+      enum:
+        - admin
+        - guest
+
+    User:
+      type: object
+      properties:
+        email:
+          type: string
+          description: user's email address
+        role:
+          $ref: '#/components/schemas/UserRole'
+      required:
+        - email
+        - role
+    
+  securitySchemes:
+    Auth:
+      type: http
+      scheme: custom
+
+paths:
+  /users:
+    get:
+      summary: Get all users
+      responses:
+        '200':
+          description: returns an array of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+    post:
+      summary: Create a new user
+      security:
+        - Auth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: user created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: bad request
+        '401':
+          description: unauthorized
+        '403':
+          description: missing permission
+        '409':
+          description: user already exists
+
+    patch:
+      summary: Update an existing user
+      security:
+        - Auth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: user updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: bad request
+        '401':
+          description: unauthorized
+        '403':
+          description: missing permission
+        '404':
+          description: user not found
+
+  /users/{email}:
+    delete:
+      summary: Delete a user
+      security:
+        - Auth: []
+      parameters:
+        - name: email
+          in: path
+          required: true
+          description: email of the user to delete
+          schema:
+            type: string
+      responses:
+        '200':
+          description: user deleted successfully
+        '401':
+          description: unauthorized
+        '403':
+          description: missing permission
+        '404':
+          description: user not found
